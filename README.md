@@ -7,7 +7,7 @@ bám sát tài liệu, hạn chế "ảo giác" (hallucination).
 Xây **from scratch** để hiểu sâu từng tầng của pipeline RAG (không dùng framework đóng gói sẵn),
 trên dữ liệu & embedding **tiếng Việt**.
 
-> Bài tập lớn AI VIET NAM (AIO2025) — tự cài đặt lại theo kiến trúc đề.
+
 
 ---
 
