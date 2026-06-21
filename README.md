@@ -40,22 +40,7 @@ Giao diện Streamlit: sidebar quản lý tài liệu + chọn phạm vi; câu t
 
 ## 🏗️ Kiến trúc
 
-```
-                    ┌──────────── Ingestion ────────────┐
-   PDF  ──►  pypdf  ──►  Recursive   ──►  GreenNode VN  ──►  Qdrant
-            (theo trang)   chunker        embedding         (vector store)
-                                                                │
-                    ┌──────────── Query (RAG) ──────────────────┘
-   Câu hỏi ──►  embed ──►  similarity search (top_k, + filter)
-                                  │
-                          chunks (S1, S2…)
-                                  │
-                       prompt (Jinja2, ép chỉ dùng ngữ cảnh)
-                                  │
-                              Gemini LLM
-                                  │
-                     RagAnswer = câu trả lời + citations
-```
+![Kiến trúc RAG](docs/architecture.svg)
 
 **Nguyên tắc thiết kế:** schema-first (Pydantic), tách tầng rõ ràng
 (`config · schemas · indexing · store · filters · rag · llm · interfaces`),
