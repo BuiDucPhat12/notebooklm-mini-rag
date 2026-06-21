@@ -31,6 +31,13 @@ class Settings(BaseSettings):
     google_api_key: str | None = Field(default=None, validation_alias="GOOGLE_API_KEY")
     hf_model: str = "Qwen/Qwen2.5-3B-Instruct"
 
+    # Tham số chức năng học tập
+    summarize_batch_size: int = Field(default=10, ge=1)
+    summarize_retrieval_k: int = Field(default=12, ge=1, le=128)
+    generation_retrieval_k: int = Field(default=16, ge=1, le=128)
+    quiz_default_count: int = Field(default=8, ge=1, le=50)
+    flashcards_default_count: int = Field(default=15, ge=1, le=100)
+
     @model_validator(mode="after")
     def _validate(self) -> "Settings":
         if self.chunk_overlap >= self.chunk_size:

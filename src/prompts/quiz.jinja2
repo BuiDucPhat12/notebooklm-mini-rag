@@ -1,0 +1,15 @@
+Tạo {{ count }} câu hỏi trắc nghiệm (tiếng Việt) CHỈ dựa trên ngữ cảnh dưới đây.
+Mỗi câu có đúng 4 lựa chọn, 1 đáp án đúng, kèm giải thích ngắn và marker nguồn ([S1], [S2]…).
+
+Trả về JSON đúng định dạng:
+{"items": [
+  {"question": "...", "options": ["A","B","C","D"], "correct_index": 0,
+   "explanation": "...", "source_markers": ["S1"], "topic": "..."}
+]}
+
+Ngữ cảnh:
+{% for c in chunks %}
+[S{{ loop.index }}] {{ c.text }}
+
+{% endfor %}
+Chỉ in JSON, không thêm chữ nào khác.

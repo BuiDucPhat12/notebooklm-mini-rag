@@ -1,0 +1,8 @@
+Tóm tắt NHÓM ĐOẠN dưới đây thành một bản tóm tắt con, chỉ dựa trên ngữ cảnh, bằng tiếng Việt.
+Trả về JSON: {"summary": "<tóm tắt ngắn>", "key_points": ["<ý 1>", "..."]}
+
+Ngữ cảnh:
+{% for c in chunks %}
+- {{ c.text }}
+{% endfor %}
+Chỉ in JSON.

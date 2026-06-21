@@ -1,0 +1,10 @@
+Tóm tắt nội dung dưới đây CHỈ dựa trên ngữ cảnh, bằng tiếng Việt.
+Trả về JSON đúng định dạng:
+{"summary": "<đoạn tóm tắt 4-8 câu>", "key_points": ["<ý chính 1>", "<ý chính 2>", "..."]}
+
+Ngữ cảnh:
+{% for c in chunks %}
+[S{{ loop.index }}] {{ c.text }}
+
+{% endfor %}
+Chỉ in JSON, không thêm chữ nào khác.

@@ -11,17 +11,30 @@ trên dữ liệu & embedding **tiếng Việt**.
 
 ---
 
+## 🖼️ Demo
+
+| Hỏi-đáp có trích dẫn nguồn |
+|---|
+| ![Q&A với trích dẫn](docs/02_qa.png) |
+
+Giao diện Streamlit: sidebar quản lý tài liệu + chọn phạm vi; câu trả lời kèm trích dẫn `[S1][S2]` và thẻ nguồn (file · trang · score).
+
+![Giao diện chính](docs/01_home.png)
+
+---
+
 ## ✨ Tính năng
 
-| | Tính năng | Trạng thái |
-|---|---|---|
-| ✅ | Nạp PDF → chunk → embed → index vào vector store (idempotent) | **MVP** |
-| ✅ | Hỏi-đáp ngữ nghĩa **kèm trích dẫn nguồn** `[S1] (file, trang)` | **MVP** |
-| ✅ | Lọc phạm vi truy xuất theo từng tài liệu | **MVP** |
-| ✅ | Hai giao diện: **CLI** (Typer) & **Web UI** (Streamlit) | **MVP** |
-| 🔜 | Tóm tắt theo chiến lược **map-reduce** | Roadmap |
-| 🔜 | Sinh **Quiz** & **Flashcards** tự động | Roadmap |
-| 🔜 | Đánh giá chất lượng bằng **Ragas** + thực nghiệm chunking/reranking | Roadmap |
+| | Tính năng |
+|---|---|
+| ✅ | Nạp PDF → chunk → embed → index vào vector store (idempotent) |
+| ✅ | Hỏi-đáp ngữ nghĩa **kèm trích dẫn nguồn** `[S1] (file, trang)` |
+| ✅ | Lọc phạm vi truy xuất theo từng tài liệu |
+| ✅ | **Tóm tắt** theo chiến lược map-reduce |
+| ✅ | Sinh **Quiz** & **Flashcards** tự động (validate JSON, chống trùng) |
+| ✅ | Hai giao diện: **CLI** (Typer) & **Web UI** (Streamlit) |
+| ✅ | Thực nghiệm so sánh cấu hình **chunking** (retrieval metric) |
+| 🔜 | Đánh giá answer-quality bằng **Ragas** + reranking (cross-encoder) |
 
 ---
 
@@ -107,9 +120,12 @@ src/
 ├── filters.py       # MetadataFilter → Qdrant filter
 ├── rag.py           # retrieve → render prompt → LLM → answer + citations
 ├── llm.py           # lớp trung gian gọi LLM (Gemini / HF-local)
+├── learning.py      # tóm tắt (map-reduce), quiz, flashcards
+├── export.py        # xuất kết quả ra text/md/json
 ├── prompts/         # prompt template (Jinja2)
+├── evaluation/      # thực nghiệm chunking + gold set
 └── interfaces/      # cli.py (Typer) · ui.py (Streamlit)
-tests/               # unit test: chunking, filters, citations, fallback
+tests/               # 14 unit test: chunking, filters, citations, fallback, learning
 ```
 
 ---
@@ -117,9 +133,19 @@ tests/               # unit test: chunking, filters, citations, fallback
 ## ✅ Kiểm thử & chất lượng
 
 ```bash
-uv run pytest        # 8 unit test: chunk_id ổn định, idempotent ingest,
-                     # filter → Qdrant, citations, fallback khi thiếu ngữ cảnh
+uv run pytest        # 14 unit test: chunk_id ổn định, idempotent ingest, filter → Qdrant,
+                     # citations, fallback, validate quiz/flashcard + chống trùng, export
 ```
+
+**Thực nghiệm chunking** (`uv run python -m src.evaluation.run_chunking`) — so cấu hình
+recursive trên gold set; với corpus nhỏ recall bão hòa nên **1000/150** là điểm cân bằng tốt
+(recall đầy đủ, ít chunk nhất):
+
+| Config | Chunks | keyword_recall@5 |
+|---|---|---|
+| 500/50 | 160 | 1.00 |
+| **1000/150** | **90** | **1.00** |
+| 1500/200 | 69 | 1.00 |
 
 **Retrieval đa tài liệu** (corpus 3 PDF khác chủ đề) — hệ thống định tuyến đúng nguồn:
 
@@ -134,9 +160,10 @@ uv run pytest        # 8 unit test: chunk_id ổn định, idempotent ingest,
 ## 🗺️ Roadmap
 
 - [x] **MVP** — ingest → Q&A có trích dẫn (CLI + Web)
-- [ ] Tóm tắt map-reduce, Quiz, Flashcards
-- [ ] Đánh giá Ragas (context recall/precision, faithfulness, answer relevancy)
-- [ ] Thực nghiệm chunking (recursive vs semantic) + reranking (cross-encoder)
+- [x] Tóm tắt map-reduce, Quiz, Flashcards
+- [x] Thực nghiệm chunking (retrieval metric)
+- [ ] Đánh giá Ragas (faithfulness, answer relevancy) + reranking (cross-encoder)
+- [ ] Semantic chunking, Qdrant server mode (docker)
 
 ---
 

@@ -42,6 +42,29 @@ def retrieve(query, k=None, filters=None, collection_name=None) -> list[Retrieve
     ]
 
 
+def fetch_all_chunks(filters=None, collection_name=None) -> list[RetrievedChunk]:
+    """Lấy toàn bộ chunk thỏa filter (scroll). Dùng cho tóm tắt/tạo học liệu theo phạm vi."""
+    from src.filters import filters_to_qdrant
+    from src.store import get_client
+
+    name = collection_name or settings.qdrant_collection
+    client = get_client()
+    qfilter = filters_to_qdrant(filters)
+    results, offset = [], None
+    while True:
+        points, offset = client.scroll(
+            name, scroll_filter=qfilter, limit=256, offset=offset, with_payload=True, with_vectors=False
+        )
+        for p in points:
+            payload = p.payload or {}
+            meta, text = payload.get("metadata") or {}, payload.get("page_content") or ""
+            if meta and text:
+                results.append(RetrievedChunk(text=text, score=0.0, metadata=ChunkMetadata(**meta)))
+        if offset is None:
+            break
+    return sorted(results, key=lambda r: (r.metadata.filename, r.metadata.page, r.metadata.chunk_id))
+
+
 def format_citations(chunks) -> list[Citation]:
     return [
         Citation(

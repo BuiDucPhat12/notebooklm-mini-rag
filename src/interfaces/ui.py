@@ -14,6 +14,7 @@ import streamlit as st
 from src.config import settings
 from src.filters import MetadataFilter
 from src.indexing import list_documents, save_and_ingest_pdf
+from src.learning import generate_flashcards, generate_quiz, summarize
 from src.rag import answer
 
 
@@ -65,18 +66,66 @@ def _tab_chat(chosen, top_k):
                     st.write(c.text[:400] + ("…" if len(c.text) > 400 else ""))
 
 
+def _scope_filter(chosen):
+    return MetadataFilter(filenames=chosen) if chosen else None
+
+
+def _tab_summary(chosen):
+    q = st.text_input("Phạm vi tóm tắt (để trống = toàn bộ phạm vi đã chọn)", key="sum_q")
+    if st.button("Tóm tắt", type="primary"):
+        with st.spinner("Đang tóm tắt…"):
+            s = summarize(query=q.strip() or None, filters=_scope_filter(chosen))
+        st.markdown(s.summary)
+        if s.key_points:
+            st.caption("Ý chính")
+            for k in s.key_points:
+                st.markdown(f"- {k}")
+
+
+def _tab_quiz(chosen):
+    q = st.text_input("Chủ đề quiz (trống = toàn bộ)", key="quiz_q")
+    n = st.slider("Số câu", 1, 15, 5, key="quiz_n")
+    if st.button("Tạo Quiz", type="primary"):
+        with st.spinner("Đang tạo quiz…"):
+            qs = generate_quiz(query=q.strip() or None, filters=_scope_filter(chosen), count=n)
+        for i, item in enumerate(qs.items, 1):
+            st.markdown(f"**Câu {i}. {item.question}**")
+            for j, opt in enumerate(item.options):
+                st.markdown(f"- {chr(65 + j)}. {opt}" + (" ✅" if j == item.correct_index else ""))
+            st.caption(f"💡 {item.explanation}  ·  nguồn {' '.join(item.source_markers)}")
+
+
+def _tab_flashcards(chosen):
+    q = st.text_input("Chủ đề flashcards (trống = toàn bộ)", key="fc_q")
+    n = st.slider("Số thẻ", 1, 20, 6, key="fc_n")
+    if st.button("Tạo Flashcards", type="primary"):
+        with st.spinner("Đang tạo flashcards…"):
+            fs = generate_flashcards(query=q.strip() or None, filters=_scope_filter(chosen), count=n)
+        cols = st.columns(2)
+        for i, c in enumerate(fs.cards):
+            with cols[i % 2].container(border=True):
+                st.markdown(f"**{c.front}**")
+                st.markdown(c.back)
+                if c.hint:
+                    st.caption(f"💡 {c.hint}")
+
+
 def run():
     st.set_page_config(page_title="NotebookLM mini", layout="wide")
     st.title("📒 NotebookLM mini")
+    st.caption("RAG hỏi-đáp tài liệu học tập có trích dẫn · tóm tắt · quiz · flashcards")
     _warmup()
     chosen, top_k = _sidebar()
 
     tab_chat, tab_sum, tab_quiz, tab_fc = st.tabs(["Hỏi đáp", "Tóm tắt", "Quiz", "Flashcards"])
     with tab_chat:
         _tab_chat(chosen, top_k)
-    for tab, name in [(tab_sum, "Tóm tắt"), (tab_quiz, "Quiz"), (tab_fc, "Flashcards")]:
-        with tab:
-            st.info(f"'{name}' sẽ có ở Phase 4.")
+    with tab_sum:
+        _tab_summary(chosen)
+    with tab_quiz:
+        _tab_quiz(chosen)
+    with tab_fc:
+        _tab_flashcards(chosen)
 
 
 run()

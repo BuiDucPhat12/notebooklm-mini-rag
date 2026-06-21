@@ -1,0 +1,8 @@
+Tổng hợp các bản tóm tắt con dưới đây thành MỘT bản tóm tắt cuối cùng mạch lạc, bằng tiếng Việt.
+Trả về JSON: {"summary": "<tóm tắt tổng hợp 4-8 câu>", "key_points": ["<ý chính 1>", "..."]}
+
+Các bản tóm tắt con:
+{% for p in partials %}
+- {{ p.summary }}
+{% endfor %}
+Chỉ in JSON.

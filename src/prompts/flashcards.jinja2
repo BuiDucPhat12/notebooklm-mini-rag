@@ -1,0 +1,14 @@
+Tạo {{ count }} flashcard (thẻ ghi nhớ, tiếng Việt) CHỈ dựa trên ngữ cảnh dưới đây.
+Mỗi thẻ gồm mặt trước (câu hỏi/khái niệm), mặt sau (giải đáp), gợi ý (nếu có), chủ đề và marker nguồn.
+
+Trả về JSON đúng định dạng:
+{"cards": [
+  {"front": "...", "back": "...", "hint": "...", "topic": "...", "source_markers": ["S1"]}
+]}
+
+Ngữ cảnh:
+{% for c in chunks %}
+[S{{ loop.index }}] {{ c.text }}
+
+{% endfor %}
+Chỉ in JSON, không thêm chữ nào khác.
