@@ -1,0 +1,150 @@
+<title>NotebookLM mini — Mockup UI</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --line:#2a2f3a;
+    --txt:#e6e9ef; --muted:#8b93a3; --accent:#4f9cf9; --accent2:#1f6feb;
+    --good:#3fb950; --cite:#2d3b52; --citetxt:#9fc1f5;
+    --warn:#d29922;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5}
+  .topbar{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+  .topbar h1{font-size:16px;margin:0;font-weight:600}
+  .topbar .tag{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+  .layout{display:grid;grid-template-columns:300px 1fr;min-height:calc(100vh - 49px)}
+  .sidebar{border-right:1px solid var(--line);background:var(--panel);padding:16px;overflow:auto}
+  .main{padding:18px 24px;overflow:auto}
+  .sect{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+  .sect:first-child{margin-top:0}
+  .upload{border:1.5px dashed var(--line);border-radius:10px;padding:18px;text-align:center;color:var(--muted);cursor:pointer}
+  .upload:hover{border-color:var(--accent)}
+  .upload b{color:var(--txt)}
+  .doc{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;margin-bottom:6px;background:var(--panel2);border:1px solid var(--line)}
+  .doc .dot{width:8px;height:8px;border-radius:50%;background:var(--good);flex:none}
+  .doc .meta{flex:1;min-width:0}
+  .doc .name{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .doc .sub{font-size:11px;color:var(--muted)}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;padding:5px 0;color:var(--txt)}
+  .chk input{accent-color:var(--accent)}
+  .tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:18px}
+  .tab{padding:9px 16px;font-size:13px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--muted);position:relative;top:1px}
+  .tab.active{color:var(--txt);background:var(--panel);border:1px solid var(--line);border-bottom-color:var(--panel)}
+  .tab.soon{opacity:.5}
+  .tab .soon-badge{font-size:9px;background:var(--cite);color:var(--citetxt);padding:1px 5px;border-radius:8px;margin-left:6px;vertical-align:middle}
+  .qbox{display:flex;gap:10px;margin-bottom:6px}
+  .qbox input{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 13px;color:var(--txt);font-size:14px}
+  .qbox input:focus{outline:none;border-color:var(--accent)}
+  .btn{background:var(--accent2);border:none;color:#fff;padding:0 18px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer}
+  .btn:hover{background:var(--accent)}
+  .hint{font-size:11px;color:var(--muted);margin-bottom:18px}
+  .qa{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+  .qa .qrow{font-size:13px;color:var(--muted);margin-bottom:10px}
+  .qa .qrow b{color:var(--txt)}
+  .answer{font-size:14.5px;line-height:1.7}
+  .cref{display:inline-block;background:var(--cite);color:var(--citetxt);font-size:11px;font-weight:600;
+    padding:1px 6px;border-radius:6px;margin:0 1px;cursor:pointer;vertical-align:baseline}
+  .sources{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+  .sources .stitle{font-size:12px;color:var(--muted);margin-bottom:10px}
+  .src{display:flex;gap:10px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px}
+  .src .marker{font-size:11px;font-weight:700;color:var(--citetxt);background:var(--cite);border-radius:6px;padding:2px 7px;height:fit-content}
+  .src .body{flex:1}
+  .src .loc{font-size:11px;color:var(--muted);margin-bottom:4px}
+  .src .snip{font-size:12.5px;color:var(--txt);opacity:.9}
+  .src .score{font-size:11px;color:var(--good)}
+  .flow{margin-top:26px;background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:16px}
+  .flow .ftitle{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px}
+  .pipe{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .step{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:12px;text-align:center}
+  .step .s2{display:block;font-size:10px;color:var(--muted)}
+  .arrow{color:var(--accent);font-weight:700}
+  .legend{margin-top:14px;font-size:11px;color:var(--muted)}
+  .legend b{color:var(--warn)}
+</style>
+
+<div class="topbar">
+  <h1>📒 NotebookLM mini</h1>
+  <span class="tag">RAG for Learning System · MVP mockup</span>
+  <span class="tag">Qdrant · Gemini · embedding VN</span>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sect">Tài liệu</div>
+    <div class="upload"><b>+ Tải PDF lên</b><br>kéo thả hoặc bấm chọn</div>
+    <div class="sect">Đã index</div>
+    <div class="doc"><span class="dot"></span><div class="meta"><div class="name">Building-Simple-NotebookLM.pdf</div><div class="sub">39 trang · 142 chunks</div></div></div>
+    <div class="doc"><span class="dot"></span><div class="meta"><div class="name">attention-transformers.pdf</div><div class="sub">12 trang · 48 chunks</div></div></div>
+    <div class="sect">Phạm vi truy xuất</div>
+    <label class="chk"><input type="checkbox" checked> Tất cả tài liệu</label>
+    <label class="chk"><input type="checkbox"> Building-Simple-NotebookLM.pdf</label>
+    <label class="chk"><input type="checkbox"> attention-transformers.pdf</label>
+    <div class="sect">Tham số</div>
+    <label class="chk">top_k truy xuất: <b style="margin-left:auto">5</b></label>
+  </aside>
+
+  <main class="main">
+    <div class="tabs">
+      <div class="tab active">Hỏi đáp</div>
+      <div class="tab soon">Tóm tắt<span class="soon-badge">sau</span></div>
+      <div class="tab soon">Quiz<span class="soon-badge">sau</span></div>
+      <div class="tab soon">Flashcards<span class="soon-badge">sau</span></div>
+    </div>
+
+    <div class="qbox">
+      <input value="RAG giúp giảm hallucination bằng cách nào?" />
+      <button class="btn">Hỏi</button>
+    </div>
+    <div class="hint">Câu trả lời chỉ dựa trên ngữ cảnh truy xuất từ tài liệu của bạn, kèm trích dẫn nguồn (S1, S2…).</div>
+
+    <div class="qa">
+      <div class="qrow"><b>Hỏi:</b> RAG giúp giảm hallucination bằng cách nào?</div>
+      <div class="answer">
+        Retrieval-Augmented Generation giảm hallucination bằng cách truy xuất các đoạn nội dung
+        liên quan từ tài liệu đã được index, rồi đưa các ngữ cảnh đó vào prompt để mô hình
+        sinh câu trả lời <span class="cref">S1</span>. Thay vì để LLM trả lời hoàn toàn từ tri thức
+        nội tại, hệ thống yêu cầu mô hình chỉ sử dụng thông tin có trong ngữ cảnh được cung cấp
+        <span class="cref">S2</span>, nhờ đó câu trả lời có cơ sở rõ ràng và người học có thể kiểm tra
+        lại nguồn <span class="cref">S1</span>.
+      </div>
+      <div class="sources">
+        <div class="stitle">Nguồn trích dẫn</div>
+        <div class="src">
+          <span class="marker">S1</span>
+          <div class="body">
+            <div class="loc">Building-Simple-NotebookLM.pdf · trang 1 <span class="score">· score 0.84</span></div>
+            <div class="snip">"…hệ thống sử dụng kiến trúc retrieval-augmented generation (RAG) để truy xuất các đoạn nội dung liên quan… giảm rủi ro hallucination và hỗ trợ người học kiểm tra lại nguồn."</div>
+          </div>
+        </div>
+        <div class="src">
+          <span class="marker">S2</span>
+          <div class="body">
+            <div class="loc">Building-Simple-NotebookLM.pdf · trang 4 <span class="score">· score 0.79</span></div>
+            <div class="snip">"…Prompt được thiết kế để yêu cầu mô hình chỉ sử dụng thông tin có trong ngữ cảnh."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="ftitle">Pipeline phía sau (MVP)</div>
+      <div class="pipe">
+        <div class="step">Câu hỏi<span class="s2">user</span></div>
+        <span class="arrow">→</span>
+        <div class="step">Embedding<span class="s2">GreenNode VN</span></div>
+        <span class="arrow">→</span>
+        <div class="step">Retrieve<span class="s2">Qdrant top_k</span></div>
+        <span class="arrow">→</span>
+        <div class="step">Prompt<span class="s2">Jinja2 + chunks</span></div>
+        <span class="arrow">→</span>
+        <div class="step">LLM<span class="s2">Gemini</span></div>
+        <span class="arrow">→</span>
+        <div class="step">Answer + citations<span class="s2">S1, S2…</span></div>
+      </div>
+      <div class="legend">
+        <b>Phạm vi MVP:</b> tab "Hỏi đáp" + upload/index PDF + trích dẫn nguồn chạy end-to-end.
+        Tóm tắt / Quiz / Flashcards / Ragas eval / thực nghiệm chunking–rerank làm ở phase sau.
+      </div>
+    </div>
+  </main>
+</div>

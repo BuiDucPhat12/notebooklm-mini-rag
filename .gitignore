@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# uv
+.uv/
+
+# env / secrets
+.env
+
+# PDF (tài liệu học + course material — không commit, tránh bloat/bản quyền)
+*.pdf
+data/*.pdf
+storage/
+
+# OS
+.DS_Store
+
+# mockup artefact (giữ source HTML, bỏ nếu không muốn)
+# mockup_ui.html
